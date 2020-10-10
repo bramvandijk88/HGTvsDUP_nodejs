@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="../libraries/dygraphs-combined-dev.js"></script>
+    <script src="../libraries/html2canvas.min.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HGT vs DUP</title>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../style/web_interface.css">
+
+      
+</head>
+<body style="margin:0px; background:#FFFFFF ;"> 
+  
+  <a href="help.html" target="blank"><div class="help">?</div></a> <!-- Help button -->
+  <a style="top:55px;" id="download" class="help">&#8615;</a> <!-- Download button-->
+
+  <script>
+
+      document.getElementById("download").addEventListener("click", function() {
+      var N = document.getElementById("Nbox").value;
+      var seed = document.getElementById("seed").value;
+      var l = document.getElementById("loss").value;
+      var g = document.getElementById("turnover").value;
+      var e = document.getElementById("mutexpr").value;
+      var s = document.getElementById("s").value;
+      var c = document.getElementById("cost").value;
+      var step = document.getElementById("stepsize").value;
+      var up = document.getElementById("up").value;
+      var name = 'N'+N+'_s'+seed+'_l'+l+'_g'+g+'_e'+e+'_c'+c+'_step'+step+'_up'+up+'.png';
+        html2canvas(document.querySelector('#boundary')).then(function(canvas) {
+            console.log(canvas);
+            saveAs(canvas.toDataURL(), name);
+        });
+      });
+    
+    function saveAs(uri, filename) 
+    {
+      var link = document.createElement('a');
+      if (typeof link.download === 'string') 
+      {
+          link.href = uri;
+          link.download = filename;
+          //Firefox requires the link to be in the body
+          document.body.appendChild(link);
+          //simulate click
+          link.click();
+          //remove the link when done
+          document.body.removeChild(link);
+      } 
+      else 
+      {
+          window.open(uri);
+      }
+    }
+</script>
+
+ <center>
+  <div style="margin:5px; background:#FFFFFF ; width: 70%; padding: 5px; border-radius: 10px; display: inline-block;">
+
+<img src="../images/hgt.png" width="200px"> 
+<img src="../images/dup.png" width="200px"> 
+
+<div id="boundary" style="padding:10px">
+<h3><b> <span style="color:#e83a3c">HGT</span> versus <span style="color:#1c86ee">DUP</span></b> </h3>
+
+<script type="module" src="./index.js"></script>
+  
+<table style="width:70%"> 
+  
+<tr><td colspan=2><div title="
+Random Number Generator (RNG) seed.
+Type in an abitrary number between 0 and 9999 to repeat the simulation with a roll of the dice.">
+RNG Seed:</div></td><td><input type="number" id="seed" min="1" max="9999"> </td> </tr>
+
+<tr><td colspan=2><div title="
+Population size (N).
+Both the HGT- and DUP-population consist of exactly N individuals, where each time step one random 
+individual is replaced by another individual. The latter individual is sampled proportional to its
+fitness. See help page (question mark in the top-right corner) for more information.
+">Population size (N):</div></td><td><input type="number" id="Nbox" min="10" max="10000" step="50" > </td> </tr>
+
+<tr><td colspan=2><div title="Per-gene probability of a gene to be lost upon replicating a genome.">Rates of gene loss:</div> </td><td><input type="number" id="loss" min="0.00" max="0.25" step="0.0005" > </td> </tr>
+<tr><td colspan=2><div title="
+Per-gene probability of a gene to be gained upon replicating a genome. Gene gain does not happen in the
+same way for both populations. The HGT-population (red) gains genes by picking up genes from another 
+individual in its population. The DUP-population (blue) gains genes by duplicating one of its own genes.
+">Rates of gene gain (hgt OR duplication):</div></td><td><input type="number" id="turnover" min="0.00" max="0.25" step="0.0005" > </td> </tr>
+<tr><td colspan=2><div title="
+Per-gene probability of changing its gene expression per replication. When gene expression deteriorates 
+(in the default settings, this is more likely), a new number is sampled between its current expression 
+rate and its current expression minus a small step size. When gene expression improves (see parameter below),
+a new number is sampled between its current expression plus a small step size. Genes cannot have more 
+than 1 expression per copy.       
+    ">Mutation rate gene expression:</div> </td><td><input type="number" id="mutexpr" min="0.00" max="0.25" step="0.0005" > </td> </tr>
+    <tr><td colspan=2> <div title="
+The cost of gene expression ensures that exuberant excessive expression rates (>1) will have a small 
+fitness penalty.">
+              Cost of gene expression: </div></td><td><input type="number" id="cost" min="0.00" max="1.0" step="0.0005" > </td> </tr>    
+<!-- <tr><td colspan=2>Mutation step size (uniform up or down): </td><td><input type="number" id="stepsize" min="0.00" max="1.0" step="0.0005" > </td> </tr> -->
+<tr><td colspan=2> <div title="
+When the expression rate of a gene mutates, this parameter determines how likely is it to improve 
+rather than decay. For example, when set to 0.01, only 1% of mutations improve expression. 
+">Mutation chance up: </td><td><input type="number" id="up" min="0.00" max="1.0" step="0.0005" > </td> </tr>
+<tr> <td > <button type="button" id="runpause"> Pause</td> <td> <button type="button" id="restart"> Restart </button></td> <td><button type="button"  onclick="location.reload()"> Reset </td> </tr> 
+</table>
+
+
+
+<!--Seed: <input type="text" value="0.1" size="4" maxlength="4" onkeyup="r_i=parseFloat(this.value)||0.1"/>-->
+
+  
+
+  <br>
+<div id="div_g" style="background-color:#FFF; height: 200px; width: 75%;"></div><br>
+<div id="div_g_anc" style="background-color:#FFF; height: 200px ; width: 75%;"></div><br>
+<div id="div_f" style="background-color:#FFF; height: 200px ; width: 75%;"></div><br>
+<div id="div_f_anc" style="background-color:#FFF; height: 200px ; width: 75%;"></div><br>
+<div id="div_e" style="background-color:#FFF; height: 200px ; width: 75%;"></div>
+<div id="div_e_anc" style="background-color:#FFF; height: 200px ; width: 75%;"></div><br>
+</center>
+
+
+<script>
+
+  let datag = []; // gsizes
+  let datag_anc = []; // gsize of ancestral lineage
+
+  let dataf = []; // fitness
+  let dataf_anc = []; // fitness of ancestral lineage
+  
+  let datae = []; // espression
+  let datae_anc = [];
+
+  dataf_anc = [[1,1,1]];
+  datag_anc = [[1,1,1]];
+  datae_anc = [[1,1,1,1,1]];
+  datag.push([1,1,1,1,1]);
+  dataf.push([1,1,1,1,1]);
+  datae.push([1,1,1,1,1]);
+
+  let g = new Dygraph(document.getElementById("div_g"), datag,
+  {
+
+    drawPoints: false,
+    showRoller: false,
+    title: 'Genome sizes',
+  	//xlabel: 'Simulation time',
+  	ylabel: '',
+    valueRange: [0.000, ],
+    strokeWidth: 3,
+    'DUP (max)': { strokeWidth: 0, fillGraph: true },
+    'HGT (max)': { strokeWidth: 0, fillGraph: true },
+    legend: 'never',
+    colors: ['#007df8', '#e83a3c','#007df8', '#e83a3c'],
+    labels: ['Time', 'DUP (avrg)', 'HGT (avrg)', 'DUP (max)', 'HGT (max)']
+  });
+  let f = new Dygraph(document.getElementById("div_f"), dataf,
+  {
+    drawPoints: false,
+    showRoller: false,    
+    title: 'Fitness',
+    //xlabel: 'Simulation time',
+    legend: 'never',
+    //valueRange: [0.0, ],
+    strokeWidth: 3,
+    'DUP (max)': { strokeWidth: 0, fillGraph: true },
+    'HGT (max)': { strokeWidth: 0, fillGraph: true },
+    colors: ['#007df8', '#e83a3c','#007df8', '#e83a3c'],
+    labels: ['Time', 'DUP (avrg)', 'HGT (avrg)', 'DUP (max)', 'HGT (max)']
+  });
+  let e = new Dygraph(document.getElementById("div_e"), datae,
+  {
+    drawPoints: false,
+    showRoller: false,
+    title: 'Expressionrate (average and max)',
+    xlabel: 'Generations',
+    legend: 'never',
+    //valueRange: [0.0, ],
+    strokeWidth: 3,
+    'DUP (max)': { strokeWidth: 0, fillGraph: true },
+    'HGT (max)': { strokeWidth: 0, fillGraph: true },
+    colors: ['#007df8', '#e83a3c','#007df8', '#e83a3c'],
+    labels: ['Time', 'DUP (avrg)', 'HGT (avrg)', 'DUP (max)', 'HGT (max)']
+  });
+  let f_anc = new Dygraph(document.getElementById("div_f_anc"), dataf_anc,
+  {
+    drawPoints: false,
+    showRoller: false,    
+    title: 'Fitness along LOD',
+    legend: 'never',
+    valueRange: [0.7, 1.1],
+    strokeWidth: 3,
+    colors: ['#007df8', '#e83a3c'],
+    labels: ['Time', 'DUP lineage', 'HGT lineage']
+  });
+  let g_anc = new Dygraph(document.getElementById("div_g_anc"), datag_anc,
+  {
+    drawPoints: false,
+    showRoller: false,    
+    title: 'Genome sizes along LOD',
+    legend: 'never',
+    valueRange: [0.0, ],
+    strokeWidth: 3,
+    colors: ['#007df8', '#e83a3c'],
+    labels: ['Time', 'DUP lineage', 'HGT lineage']
+  });
+  let e_anc = new Dygraph(document.getElementById("div_e_anc"), datae_anc,
+  {
+    drawPoints: false,
+    showRoller: false,    
+    title: 'Average expression along LOD',
+    legend: 'never',
+    valueRange: [0.0, 1.1],
+    strokeWidth: 3,
+    colors: ['#007df8', '#e83a3c','#007df8', '#e83a3c'],
+    'DUP (max)': { strokeWidth: 0, drawPoints:true },
+    'HGT (max)': { strokeWidth: 0, drawPoints:true },
+    labels: ['Time', 'DUP lineage', 'HGT lineage','DUP (max)', 'HGT (max)']
+  });
+  
+
+     window.updateGraphG = function (Time,arr,arr2) 
+    {
+      const x = Time;  // current time
+      const max_y = Math.max(...arr);
+      const max_y2 = Math.max(...arr2);
+      const y = arr.reduce((cum,val) => cum + val, 0) / arr.length; // reduces array to single thing by applying a function to all elements, with an initial value (0)
+      const y2 = arr2.reduce((cum,val) => cum + val, 0) / arr2.length; // reduces array to single thing by applying a function to all elements, with an initial value (0)
+      datag.push([x, y, y2, max_y, max_y2]);
+      //if(datag.length > 100) datag.shift();
+      
+      g.updateOptions( {'file': datag } );
+    }
+
+    window.updateGraphF = function (Time,arr,arr2) 
+    {
+      const x = Time;  // current time
+      const max_y = Math.max(...arr);
+      const max_y2 = Math.max(...arr2);
+      const y = arr.reduce((cum,val) => cum + val, 0) / arr.length; // reduces array to single thing by applying a function to all elements, with an initial value (0)
+      const y2 = arr2.reduce((cum,val) => cum + val, 0) / arr2.length; // reduces array to single thing by applying a function to all elements, with an initial value (0)      
+      dataf.push([x, y, y2, max_y, max_y2]);
+      f.updateOptions( {'file': dataf } );
+    }
+
+    window.updateGraphs_anc = function (dup_trace,hgt_trace) 
+    {
+      dataf_anc = [];
+      datag_anc = [];
+      datae_anc = [];
+      
+      let min_length = Math.min(dup_trace[0].length, hgt_trace[0].length);
+      
+      for(let i =0; i<min_length; i++)
+      {
+        dataf_anc.unshift([dup_trace[0][i], dup_trace[1][i], NaN]);
+        datag_anc.unshift([dup_trace[0][i], dup_trace[2][i], NaN]);
+        datae_anc.unshift([dup_trace[0][i], dup_trace[3][i], NaN, dup_trace[4][i], NaN]);
+      } 
+      for(let i =0; i<min_length; i++)
+      {
+        dataf_anc.unshift([hgt_trace[0][i], NaN, hgt_trace[1][i]]);
+        datag_anc.unshift([hgt_trace[0][i], NaN, hgt_trace[2][i]]);
+        datae_anc.unshift([hgt_trace[0][i], NaN, hgt_trace[3][i], NaN, hgt_trace[4][i]]);
+      }    
+  
+      f_anc.updateOptions( {'file': dataf_anc } );
+      g_anc.updateOptions( {'file': datag_anc } );
+      e_anc.updateOptions( {'file': datae_anc } );
+    }
+
+    window.updateGraphE = function (Time,arr,arr2) 
+    {
+      const x = Time;  // current time
+      const max_y = Math.max(...arr);
+      const max_y2 = Math.max(...arr2);
+      const y = arr.reduce((cum,val) => cum + val, 0) / arr.length; // reduces array to single thing by applying a function to all elements, with an initial value (0)      
+      const y2 = arr2.reduce((cum,val) => cum + val, 0) / arr2.length; // reduces array to single thing by applying a function to all elements, with an initial value (0)
+      datae.push([x, y, y2,max_y,max_y2]);
+      e.updateOptions( {'file': datae } );
+      //if(Time%1000==0)e.updateOptions( {'dateWindow': [0,Time*2] } ); // Werkt niet want hij schrijft nu weg zodra hij kan, dus niet elke tijdstap :)
+    }
+    window.clearGraphs = function ()
+    {
+      datag = []; // gsizes
+      dataf = []; // fitness
+      datae = []; // espression
+      datag.push([1,1,1,1,1]);
+      dataf.push([1,1,1,1,1]);
+      datae.push([1,1,1,1,1]);
+      g.updateOptions( {'file': datag } );
+      f.updateOptions( {'file': dataf } );
+      e.updateOptions( {'file': datae } );
+    }
+  
+  </script>
+
+</div>
+
+</body>
+</html>

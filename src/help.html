@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HGT vs DUP (helppage)</title>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../style/web_interface.css">
+</head>
+<body>
+    <div class="description">
+        
+          <center></center><h3><b>HGT vs DUP</b> </h3></center>
+        HGT vs DUP is a simple computational model of a population of evolving genomes. It studies how evolving genomes adapt to ongoing mutations that can (partially) break their genes. Each individual carries a number of genes which all have a unique expression rate. The 
+        individuals are maximally fit when expression up to "1.0" gene products. If they express too little, they are less fit. If they express too much, they pay a small cost for the extra protein
+        expresion. I.o.w., genomes with 1 copies of 1.0 expression (the initial individuals!) are equally fit as individuals with 2 copy of 0.5, of 4 copies of 0.25, etc. The expression rate of genes mutates upon reproduction of the individuals,
+        which happens according to a Moran process proportional to their fitness. Both populations can lose / gain genes, but one gains genes through gene duplications, while the other population
+        can only gain genes by picking up genes from other individuals in the populations. These rates (del/dup/hgt) are assumed to be identical. <center> <img style="width:80%" src="../images/minimalmodel.png"></center>
+        </div>
+    
+</body>
+</html>
